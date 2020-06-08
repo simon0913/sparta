@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <title>스파르타코딩클럽 | 넷째 주 과제</title>
+    <link href="https://fonts.googleapis.com/css2?family=Stylish&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Stylish', sans-serif;
+        }
+
+        .wrap {
+            margin: auto;
+            width: 700px;
+        }
+
+        .image {
+            width: 700px;
+            height: 400px;
+            margin: auto;
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <div style="text-align:center;"><img class=image
+            src=https://shopping-phinf.pstatic.net/main_2068771/20687716541.20190821100529.jpg?type=f300 /></div>
+    <div class="wrap">
+
+        <div>
+            <h1 style="display:inline">손 소독제 팝니다 </h1>
+            <h3 style="display:inline">가격:7,050원/500ml.</h3>
+            <p>
+                향균효과를 <span style="color:blue ">식약처에서 허가</span>받은 <span style="color:blue">의약외품</span>
+                에탄올 등을 유효성분으로 하여 <span style="color:blue">손이나 피부의 살균소독</span>을 목적
+                으로 사용.
+            </p>
+            <h2>주문하기</h2>
+            <div>달러-원 환율: <span id="exchange"></span></div>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">주문자 성함:</span>
+            </div>
+            <input id=CostumerName type="text" class="form-control" placeholder="이름을 입력해주세요" aria-label="Username"
+                aria-describedby="basic-addon1">
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">수량:</span>
+            </div>
+            <input id=Quantity type="number" class="form-control" placeholder="수량을 선택하세요" aria-label="Username"
+                aria-describedby="basic-addon1">
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">주소:</span>
+            </div>
+            <input id=Address type="text" class="form-control" placeholder="정확한 주소를 입력해주세요" aria-label="Username"
+                aria-describedby="basic-addon1">
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">전화번호:</span>
+            </div>
+            <input id=PhoneNumber type="text" class="form-control" placeholder="" aria-label="Username"
+                aria-describedby="basic-addon1">
+        </div>
+        <div><button class="button" id="button1" onclick="button1_click()">주문하기</button></div>
+
+        <table id = 'orders_table' class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">주문자 성함</th>
+                    <th scope="col">수량</th>
+                    <th scope="col">주소</th>
+                    <th scope="col">전화번호</th>
+                </tr>
+            </thead>
+            <tbody>
+        
+            </tbody>
+        </table>
+        <script>
+
+
+
+            function button1_click() {
+                let PhoneNumber = $('#PhoneNumber').val();
+                let RightPhoneNumberForm = PhoneNumber.includes('-' && '010');
+                let Quantity = $('#Quantity').val();
+                let CostumerName = $('#CostumerName').val();
+                let Address = $('#Address').val();
+
+                if ($('#CostumerName').val() == '') {
+                    alert("주문자 성함을 입력해 주세요!")
+                } else if ($('#Quantity').val() == '') {
+                    alert("수량을 입력하세요!")
+                } else if ($('#Address').val() == '') {
+                    alert("주소를 입력해주세요!")
+                } else if ($('#PhoneNumber').val() == '') {
+                    alert("전화번호를 입력해주세요")
+                } else if (RightPhoneNumberForm == false) {
+                    alert("올바른 전화번호가 아닙니다.")
+                }
+                else {
+                    $.ajax({
+                        type: 'POST', // 타입을 작성합니다.
+                        url: '/orders', // url을 작성합니다.
+                        data: { name_give: CostumerName, quantity_give: Quantity, address_give: Address, phoneNumber_give: PhoneNumber },// data를 작성합니다. },
+                        success: function (response) {
+                            if (response['result'] == 'success') {
+                                alert(response['msg']);
+                                window.location.reload();
+                            }
+                        }
+                    });
+                }
+
+
+            }
+            $(document).ready(function () {
+                listing();
+                set_exchange();
+
+            });
+
+            function set_exchange() {
+                $.ajax({
+                    type: "GET",
+                    url: "https://api.manana.kr/exchange/rate.json",
+                    data: {},
+                    success: function (response) {
+
+                        $('#exchange').text(response[1]['rate']);
+                    }
+                })
+            }
+
+
+
+
+            function listing() {
+                // 1. 리뷰 목록을 서버에 요청하기
+                // 2. 요청 성공 여부 확인하기
+                // 3. 요청 성공했을 때 리뷰를 올바르게 화면에 나타내기
+                $.ajax({
+                    type: "GET",
+                    url: "/orders",
+                    data: {},
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            let orders = response['orders'];
+                            
+                            for (let i = 0; i < orders.length; i++) {
+                                let name = orders[i]['name'];
+                                let quantity = orders[i]['quantity'];
+                                let address = orders[i]['address'];
+                                let phoneNumber = orders[i]['phoneNumber'];
+                                let temp_html = `<tr>
+                                                    <td>${i + 1}번째<td>
+                                                    <td>${name}</td>
+                                                    <td>${quantity}</td>
+                                                    <td>${address}</td>
+                                                    <td>${phoneNumber}</td>
+                                                </tr>`
+                                
+                                $('#orders_table').append(temp_html)
+
+                            }
+                            // 2. 성공했을 때 리뷰를 올바르게 화면에 나타내기
+                        }
+                    }
+
+                });
+            }
+
+
+
+        </script>
+</body>
